@@ -64,12 +64,13 @@ def calculate_score(orders: Order):
         print(df)
         data = df.to_json(orient='records')[1:-1].replace('},{', '} {')
         print(data)
+        db_Order = ModelOrder(order_id=orders.order_id, request=data)
+        db.session.add(db_Order)
+        db.session.commit()
 
     except (APIException, ModelParamException) as e:
         return {'error': str(e)}, 400
-    db_Order = ModelOrder(order_id=orders.order_id, request=data)
-    db.session.add(db_Order)
-    db.session.commit()
+    
     return data
 
 
