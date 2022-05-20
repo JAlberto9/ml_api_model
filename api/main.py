@@ -59,6 +59,8 @@ def calculate_score(orders: Order):
         print(df)
         data_m = xgb.DMatrix(df)
         df['taken'] = model.predict(data_m)
+        df['taken_score'] =  df['taken']
+        df['taken'] = (df['taken'] > .5).astype(int)
         print(df)
         data = df.to_json(orient='records')[1:-1].replace('},{', '} {')
         print(data)

@@ -64,3 +64,50 @@ docker-compose build
 docker-compose up
 ```
 
+##  Docs 🚀
+FastAPI tiene integrado la doc para poder ver los endpoints de nuestro MS, para poder acceder solo entra en esta direccion
+
+```
+http://localhost:8000/docs
+```
+
+Para ingresar a pgAdmin y verificar los registros ingestados acceder al UI
+
+```
+http://localhost:5050/browser/
+```
+Para este ultimo recuerda loguearte con los datos aue colocaste en el .env
+
+Estas listo para hacer las pruebas al MS puedes usar la misma interfaz de FastAPI, POSTMAN, con el que te siguentas mas agusto.
+
+
+# TRAIN MODEL
+Ahora te explicaremos como entrenar tu modelo tu modelo
+
+## Requisitos
+
+Indispensable para esta parte usar tu entornovirtual, si tienes MacOS lo pudes inizilicar de la siguiente forma:
+```
+virtualenv venv
+```
+Accedemos al entorno virtual
+```
+source venv/bin/activate
+```
+Despues de eso estaras dentro del entorno virtual, procedemos a instalar los requirements del repositorio
+
+```
+pip install -r requirements.txt
+```
+## Entrenamiento
+
+Dentro del codigo de train.py tenemos todo el pipeline de entrenamiento, desde la busqueda de hierparmetros hasta el print de las distintas metricas que sacamos durante el entrenmiento.
+```
+ python src/train/train.py 
+```
+## Predict
+
+Podemos calcular el target para csv en bach, colocando la data en el directorio de data y solo corriendo el siguiente script podemos evaluar a todo el csv con el modelo.
+```
+ python src/train/train.py 
+```

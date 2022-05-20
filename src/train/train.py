@@ -9,7 +9,6 @@ from sklearn.model_selection import train_test_split
 from sklearn import model_selection
 import matplotlib.pyplot as plt
 from data import FEATURES
-from pylab import rcParams
 # import seaborn as sns
 
 import xgboost as xgb
@@ -54,13 +53,13 @@ def save_model(model_name, bst_model, features, folder_name):
 
 def train():
     # mlflow.xgboost.autolog()
-    train_dataset_path = 'data/datase.csv'
-    model_path_xgb = 'model/MODEL_CLASSIFIEr'
-    scores_file = 'metrics/scores.json'
+    train_dataset_path = 'src/data/datase.csv'
+    model_path_xgb = 'src/model/MODEL_CLASSIFIEr'
+    scores_file = 'src/metrics/scores.json'
 
     # Initialize XGB model∫
     clf = xgb.XGBClassifier(
-        objective="binary:logistic",
+        #objective="binary:logistic",
         eval_metric="logloss",
         use_label_encoder=False,
         seed=42
@@ -108,7 +107,7 @@ def train():
     top_features['importances'] = model.feature_importances_
     top_features = top_features.set_index('columns')
     top_features.sort_values(by='importances', ascending=False, inplace=True)
-    top_features.to_csv('data/top_features_importance.csv')
+    top_features.to_csv('src/data/top_features_importance.csv')
     top_features = top_features[:50]
     print(top_features)
     print("")
@@ -148,7 +147,7 @@ def train():
     # Save classes
     classes = pd.DataFrame(y_pred).join(y_test)
     classes.columns = ['predicted', 'actual']
-    classes.to_csv('data/classes.csv', index=False)
+    classes.to_csv('src/data/classes.csv', index=False)
 
     y_pred = (y_pred >= threshold).astype(int)
     print(metrics.confusion_matrix(y_test, y_pred))
