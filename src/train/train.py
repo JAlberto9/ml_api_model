@@ -59,7 +59,7 @@ def train():
 
     # Initialize XGB model∫
     clf = xgb.XGBClassifier(
-        #objective="binary:logistic",
+        # objective="binary:logistic",
         eval_metric="logloss",
         use_label_encoder=False,
         seed=42
@@ -81,15 +81,6 @@ def train():
     print('Splitting...')
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=random_state)
-    #train, test = model_selection.train_test_split(X, y, test_size=test_size, random_state=random_state)
-   # print(train.columns)
-
-    # Train
-    #y_train = train.pop(metric_name)
-    #X_train = train
-
-    #y_test = test.pop(metric_name)
-    #X_test = test
 
     # Train
     print('Training...')

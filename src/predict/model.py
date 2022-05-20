@@ -7,4 +7,3 @@ def load_model():
     bst = xgb.Booster()
     bst.load_model(fname=model_name + ".xgb")
     return bst
-
