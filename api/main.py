@@ -63,14 +63,11 @@ def calculate_score(orders: OrderList):
                     'to_user_elevation': x.to_user_elevation
                 }, index=[0]
             )
-            print(df)
             data_m = xgb.DMatrix(df)
             df['taken'] = model.predict(data_m)
             df['taken_score'] = df['taken']
             df['taken'] = (df['taken'] > .5).astype(int)
-            print(df)
             data = df.to_json(orient='records')[1:-1].replace('},{', '} {')
-            print(data)
             db_Order = ModelOrder(order_id=x.order_id, request=data)
             db.session.add(db_Order)
             db.session.commit()

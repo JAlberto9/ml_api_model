@@ -80,6 +80,39 @@ Para este ultimo recuerda loguearte con los datos aue colocaste en el .env
 
 Estas listo para hacer las pruebas al MS puedes usar la misma interfaz de FastAPI, POSTMAN, con el que te siguentas mas agusto.
 
+Agrego un ejemplo de body que puede recibir 
+
+```
+curl -X 'POST' \
+  'http://localhost:8000/calculate/' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+   "data":[
+      {
+         "order_id":123,
+         "store_id":34,
+         "to_user_distance":643,
+         "to_user_elevation":223,
+         "total_earning":53
+      },
+      {
+         "order_id":345,
+         "store_id":123,
+         "to_user_distance":123,
+         "to_user_elevation":3123,
+         "total_earning":1232
+      },
+      {
+         "order_id":5667,
+         "store_id":56,
+         "to_user_distance":789,
+         "to_user_elevation":32,
+         "total_earning":34
+      }
+   ]
+}'
+```
 
 # TRAIN MODEL
 Ahora te explicaremos como entrenar tu modelo tu modelo
