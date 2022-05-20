@@ -1,8 +1,9 @@
 import logging
 import os
-from typing import Optional
+from typing import List, Optional
 from urllib import request
 import xgboost as xgb
+import json
 
 import uvicorn
 import pandas as pd
@@ -11,7 +12,6 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi_sqlalchemy import DBSessionMiddleware, db
 from pydantic import BaseModel
-
 
 from api.models import Order
 from api.models import Order as ModelOrder
@@ -41,37 +41,44 @@ class Order(BaseModel):
     taken: Optional[int] = None
 
 
+class OrderList(BaseModel):
+    data: List[Order]
+
+
 @app.get("/health")
 async def root():
     return {"message": "It's Ok"}
 
 
 @app.post("/calculate/")
-def calculate_score(orders: Order):
-    try:
-        # Create Datagrame
-        df = pd.DataFrame({
-            'total_earning': orders.total_earning,
-            'to_user_distance': orders.to_user_distance,
-            'to_user_elevation': orders.to_user_elevation
-        }, index=[0])
+def calculate_score(orders: OrderList):
+    response = []
+    for x in orders.data:
+        try:
+            # Create Dataframe
+            df = pd.DataFrame(
+                {
+                    'total_earning': x.total_earning,
+                    'to_user_distance': x.to_user_distance,
+                    'to_user_elevation': x.to_user_elevation
+                }, index=[0]
+            )
+            print(df)
+            data_m = xgb.DMatrix(df)
+            df['taken'] = model.predict(data_m)
+            df['taken_score'] = df['taken']
+            df['taken'] = (df['taken'] > .5).astype(int)
+            print(df)
+            data = df.to_json(orient='records')[1:-1].replace('},{', '} {')
+            print(data)
+            db_Order = ModelOrder(order_id=x.order_id, request=data)
+            db.session.add(db_Order)
+            db.session.commit()
+            response.append(data)
+        except (APIException, ModelParamException) as e:
+            return {'error': str(e)}, 400
 
-        print(df)
-        data_m = xgb.DMatrix(df)
-        df['taken'] = model.predict(data_m)
-        df['taken_score'] =  df['taken']
-        df['taken'] = (df['taken'] > .5).astype(int)
-        print(df)
-        data = df.to_json(orient='records')[1:-1].replace('},{', '} {')
-        print(data)
-        db_Order = ModelOrder(order_id=orders.order_id, request=data)
-        db.session.add(db_Order)
-        db.session.commit()
-
-    except (APIException, ModelParamException) as e:
-        return {'error': str(e)}, 400
-    
-    return data
+    return response
 
 
 if __name__ == "__main__":
