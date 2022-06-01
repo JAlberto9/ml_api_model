@@ -1,4 +1,4 @@
-# ML CHALLENGE
+# ML API MODEL ARCH
 
 Repositorio de entrenamiento de modelo de ML y disponibilizado en aun API con respaldo en un DB para cada request a la API.
 
